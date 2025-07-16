@@ -1,24 +1,24 @@
 
-import RegistroForm from '../components/RegistroUsuario';
-import { UsuarioService } from '../services/UsuarioService';
+import PacienteForm from '../components/RegistroPaciente';
+import { PacienteService } from '../services/PacienteService';
 import { useNavigate } from 'react-router-dom';
-import type { UserDTO } from '../interfaces/User';
+import type { Paciente } from '../interfaces/Paciente';
 
 function RegistroPage() {
 
   const navigate = useNavigate();
 
   const handleVolver = () => {
-    navigate(`/`); 
+    navigate(`/list/Pacientes`); 
   }
 
-  const handleRegistro = async (data: UserDTO) => {
+  const handleRegistro = async (data: Paciente) => {
     
     console.log("data", data)
     try {
-      await UsuarioService.createUser(data);
+      await PacienteService.registrar(data);
       alert("Usuario registrado exitosamente ✅");
-      navigate('/');
+      navigate('/list/Pacientes');
     } catch (error) {
       console.error("Error al registrar usuario:", error);
       alert("❌ Ocurrió un error al registrar el usuario.");
@@ -26,8 +26,8 @@ function RegistroPage() {
   };
 
   return (
-    <RegistroForm onRegistro={handleRegistro} 
-     onVolver={handleVolver}/>
+    <PacienteForm onGuardar={handleRegistro}
+    onVolver={handleVolver} />
   );
 }
 

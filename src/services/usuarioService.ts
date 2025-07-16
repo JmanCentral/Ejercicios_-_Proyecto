@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { UserDTO } from "../interfaces/auth";
-import type { LoginResponse} from "../interfaces/auth";
-import type { LoginRequest } from "../interfaces/auth";
+import type { UserDTO } from "../interfaces/User";
+import type { LoginResponse} from "../interfaces/Auth";
+import type { LoginRequest } from "../interfaces/Auth";
 
 
 export class UsuarioService {
@@ -17,7 +17,5 @@ export class UsuarioService {
     const response = await axios.post<LoginResponse>(`${this.API_URL}/login`, login);
     return response.data;
   }
-
-
 
 }
