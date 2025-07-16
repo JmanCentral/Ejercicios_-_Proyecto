@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HistoriaClinicaService } from '../services/HistoriaClinicaService'
 import HistoriaClinicaCard from "../components/HistoriaClinicaCard"; 
 import type { HistoriaClinica } from '../interfaces/Historia'
@@ -12,6 +12,7 @@ function HistoriaPage() {
   const navigate = useNavigate();
 
   const [historia, setHistoria] = useState<HistoriaClinica | null>(null);
+  const [recargarHistoria, setRecargarHistoria] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,9 +20,13 @@ function HistoriaPage() {
     const fetchData = async () => {
       try {
         const dataHistoria = await HistoriaClinicaService.getHistoriaByPaciente(Number(id));
+        console.log("dataaa",dataHistoria)
         console.log("data recibida",dataHistoria)
-        setHistoria(dataHistoria);
-        setError(null);
+         if (dataHistoria) {
+          setHistoria(dataHistoria);
+        } else {
+          navigate(`/crear/Historia/${id}?nombre=${encodeURIComponent(nombre ?? "")};`);
+        }
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -30,16 +35,21 @@ function HistoriaPage() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id,recargarHistoria]);
 
   const handleEditar = (idHistoria: number) => {
-    navigate(`/editar/Historia/${idHistoria}`);
+    navigate(`/editar/Historia/${idHistoria}?nombre=${encodeURIComponent(nombre ?? "")};`);
   };
 
-  const handleEliminar = (idHistoria: number) => {
-    console.log("Eliminar historia clínica:", idHistoria);
-    
-  };
+  const handleEliminar = async (idHistoria:number) =>{
+
+    try {
+        await HistoriaClinicaService.delete(idHistoria)
+         setRecargarHistoria(prev => !prev);
+    } catch (error) {
+        console.error("Error eliminando historia:", error);
+    }
+    };
 
   return (
   <div className="p-6 space-y-4">

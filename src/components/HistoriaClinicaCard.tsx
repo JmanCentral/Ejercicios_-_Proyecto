@@ -3,7 +3,7 @@ import type { HistoriaClinica } from "../interfaces/Historia";
 interface Props {
   historia: HistoriaClinica;
   onEditar: (id: number) => void;
-  onEliminar: (id: number) => void;
+  onEliminar: (id: number ) => void;
 }
 
 function HistoriaClinicaCard({ historia, onEditar, onEliminar }: Props) {
@@ -19,9 +19,7 @@ function HistoriaClinicaCard({ historia, onEditar, onEliminar }: Props) {
         <p><strong>Enfermedades Previas:</strong> {historia.enfermedadesPrevias}</p>
         <p><strong>Observaciones:</strong> {historia.observacionesGenerales}</p>
         <p><strong>Antecedentes:</strong> {historia.antecedentes}</p>
-        <p><strong>ID Paciente:</strong> {historia.idPaciente}</p>
       </div>
-
       <div className="flex justify-end gap-3 mt-6">
         <button
           onClick={() => onEditar(historia.id)}

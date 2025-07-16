@@ -8,6 +8,8 @@ import LoginPage from './pages/LoginUsuarioPage'
 import PacientePage from './pages/PacientesPage'
 import ProtectedRoute from './routes/ProtectedRoute'
 import HistoriaClinicaPage from './pages/HistoriaCLinicaPage'
+import CrearHistoriaPage from './pages/CrearHistoriaPage'
+import EdiarHistoriaPage from './pages/EditarHistoriaPage'
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
       <Route path="/registro/Paciente" element={<ProtectedRoute><RegistroPacientePage/></ProtectedRoute>} />
       <Route path="/editar/Paciente/:id" element={<ProtectedRoute><EditarPacientePage/></ProtectedRoute>} />
       <Route path="/list/Historia/:id" element={<ProtectedRoute><HistoriaClinicaPage/></ProtectedRoute>} />
+      <Route path="/crear/Historia/:id" element={<ProtectedRoute><CrearHistoriaPage/></ProtectedRoute>} />
+      <Route path="/editar/Historia/:id" element={<ProtectedRoute><EdiarHistoriaPage/></ProtectedRoute>} />
     </Routes>
 
   )
