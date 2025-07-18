@@ -1,4 +1,5 @@
-
+// Tipado explícito para las props que recibe el componente
+// 🧠 Esto forma parte del uso de TypeScript en React
 import type { Paciente } from '../interfaces/Paciente'
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
   loading: boolean
 }
 
+// 🧠 Componente funcional típico de React que recibe props
 function ListPacientes({
   pacientes,
   busqueda,
@@ -28,6 +30,7 @@ function ListPacientes({
 }: Props) {
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* ✅ Uso de Tailwind para navbar con color, padding y sombra */}
       <nav className="bg-green-600 py-4 shadow">
         <div className="container mx-auto">
           <span className="text-white text-xl font-bold text-center block">
@@ -36,17 +39,27 @@ function ListPacientes({
         </div>
       </nav>
 
+      {/* ✅ Contenedor principal con padding y responsividad */}
       <div className="container mx-auto px-4 py-6">
+
+        {/* ✅ Controles: botón + búsqueda con diseño responsivo y separación */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
           <div className="flex gap-3 flex-wrap">
-            <button onClick={onNuevo} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <button
+              onClick={onNuevo}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            >
               ➕ Nuevo Paciente
             </button>
-            <button onClick={onVolver} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+            <button
+              onClick={onVolver}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+            >
               🏠 Volver al Menú
             </button>
           </div>
 
+          {/* ✅ Input controlado: tema importante de React */}
           <div>
             <input
               type="text"
@@ -58,12 +71,14 @@ function ListPacientes({
           </div>
         </div>
 
+        {/* ✅ Feedback visual de carga usando animación de Tailwind */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-green-600 border-solid"></div>
             <span className="ml-4 text-green-700 font-semibold">Cargando...</span>
           </div>
         ) : (
+          // ✅ Tabla responsive con diseño limpio
           <div className="overflow-x-auto">
             <table className="min-w-full table-auto border-collapse border border-gray-300 text-center">
               <thead className="bg-green-200">
@@ -81,6 +96,7 @@ function ListPacientes({
                 </tr>
               </thead>
               <tbody>
+                {/* ✅ Renderizado condicional si no hay pacientes */}
                 {pacientes.length === 0 ? (
                   <tr>
                     <td colSpan={10} className="p-4">
@@ -88,6 +104,7 @@ function ListPacientes({
                     </td>
                   </tr>
                 ) : (
+                  // ✅ Renderizado dinámico con map
                   pacientes.map((p) => (
                     <tr key={p.id} className="hover:bg-gray-100">
                       <td className="border p-2">{p.id}</td>
@@ -99,10 +116,16 @@ function ListPacientes({
                       <td className="border p-2">{p.direccionCompleta}</td>
                       <td className="border p-2">{p.tipoSangre}</td>
                       <td className="border p-2">
-                        <button onClick={() => onEliminar(p.id!)} className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600">
+                        <button
+                          onClick={() => onEliminar(p.id!)}
+                          className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600"
+                        >
                           ❌ Eliminar
                         </button>
-                        <button onClick={() => onEditar(p.id!)} className="bg-green-600 text-white px-2 py-1 rounded text-sm ml-2 hover:bg-green-700">
+                        <button
+                          onClick={() => onEditar(p.id!)}
+                          className="bg-green-600 text-white px-2 py-1 rounded text-sm ml-2 hover:bg-green-700"
+                        >
                           ✏️ Editar
                         </button>
                       </td>
@@ -122,8 +145,12 @@ function ListPacientes({
           </div>
         )}
 
+        {/* ✅ Botón final para cerrar sesión */}
         <div className="mt-6 text-center">
-          <button onClick={onLogout} className="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800">
+          <button
+            onClick={onLogout}
+            className="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800"
+          >
             🔒 Cerrar sesión
           </button>
         </div>
@@ -132,4 +159,4 @@ function ListPacientes({
   )
 }
 
-export default ListPacientes
+export default ListPacientes;

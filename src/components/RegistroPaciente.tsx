@@ -1,6 +1,17 @@
 import { useForm } from 'react-hook-form';
 import type { Paciente } from '../interfaces/Paciente';
-import { useEffect } from 'react';
+import { useEffect ,  useState } from 'react';
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select } from "@/components/ui/select"
+import { SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+
 
 interface Props {
   onGuardar: (data: Omit<Paciente, 'id'>) => void;
@@ -9,6 +20,9 @@ interface Props {
 }
 
 function PacienteForm({ onGuardar, onVolver, initialValues }: Props) {
+
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
   const {
     register,
     handleSubmit,
@@ -25,122 +39,101 @@ function PacienteForm({ onGuardar, onVolver, initialValues }: Props) {
   }, [initialValues, setValue]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-100 py-6 px-4">
+
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from--50 to-green-500 py-6 px-4">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8">
-        <h2 className="text-3xl font-bold text-center text-purple-700 mb-6">
+        <h2 className="text-3xl font-bold text-center text-green-700 mb-6">
           {initialValues ? 'Editar Paciente' : 'Registrar Paciente'}
         </h2>
 
         <form onSubmit={handleSubmit(onGuardar)} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-            <input
-              type="text"
-              {...register("nombre", { required: "Campo obligatorio" })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            />
+          {/* Nombre completo */}
+          <div className="space-y-2 text-green-700">
+            <Label htmlFor="nombre">Nombre completo</Label>
+            <Input id="nombre" type="text" {...register("nombre", { required: "Campo obligatorio" })} />
             {errors.nombre && <p className="text-sm text-red-500 mt-1">{errors.nombre.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Documento</label>
-            <input
-              type="text"
-              {...register("documento", { required: "Campo obligatorio" })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            />
+          {/* Documento */}
+          <div className="space-y-2 text-green-700">
+            <Label htmlFor="documento">Documento</Label>
+            <Input id="documento" type="text" {...register("documento", { required: "Campo obligatorio" })} />
             {errors.documento && <p className="text-sm text-red-500 mt-1">{errors.documento.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-            <input
+          {/* Correo */}
+          <div className="space-y-2 text-green-700">
+            <Label htmlFor="correo">Correo electrónico</Label>
+            <Input
+              id="correo"
               type="email"
               {...register("correo", {
                 required: "Campo obligatorio",
                 pattern: {
                   value: /^[^@]+@[^@]+\.[^@]+$/,
-                  message: "Correo inválido",
-                },
+                  message: "Correo inválido"
+                }
               })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
             />
             {errors.correo && <p className="text-sm text-red-500 mt-1">{errors.correo.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-            <input
-              type="tel"
-              {...register("telefono", { required: "Campo obligatorio" })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            />
+          {/* Teléfono */}
+          <div className="space-y-2 text-green-700">
+            <Label htmlFor="telefono">Teléfono</Label>
+            <Input id="telefono" type="tel" {...register("telefono", { required: "Campo obligatorio" })} />
             {errors.telefono && <p className="text-sm text-red-500 mt-1">{errors.telefono.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de nacimiento</label>
-            <input
-              type="date"
-              {...register("fechaNacimiento", { required: "Campo obligatorio" })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            />
+          {/* Fecha de nacimiento */}
+          <div className="space-y-2 text-green-700">
+            <Label htmlFor="fechaNacimiento">Fecha de nacimiento</Label>
+            <Input id="fechaNacimiento" type="date" {...register("fechaNacimiento", { required: "Campo obligatorio" })} />
             {errors.fechaNacimiento && <p className="text-sm text-red-500 mt-1">{errors.fechaNacimiento.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Dirección completa</label>
-            <input
-              type="text"
-              {...register("direccionCompleta", { required: "Campo obligatorio" })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            />
+          {/* Dirección completa */}
+          <div className="space-y-2 text-green-700">
+            <Label htmlFor="direccionCompleta">Dirección completa</Label>
+            <Textarea id="direccionCompleta" {...register("direccionCompleta", { required: "Campo obligatorio" })} />
             {errors.direccionCompleta && <p className="text-sm text-red-500 mt-1">{errors.direccionCompleta.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de sangre</label>
-            <select
-              {...register("tipoSangre", { required: "Campo obligatorio" })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            >
-              <option value="">Selecciona una opción</option>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="B+">B+</option>
-              <option value="B-">B-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-            </select>
+          {/* Tipo de sangre */}
+          <div className="space-y-2 text-green-700">
+            <Label>Tipo de sangre</Label>
+            <Select onValueChange={(value) => value && register("tipoSangre").onChange({ target: { value } })}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecciona una opción" />
+              </SelectTrigger>
+              <SelectContent>
+                {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((tipo) => (
+                  <SelectItem key={tipo} value={tipo}>
+                    {tipo}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {errors.tipoSangre && <p className="text-sm text-red-500 mt-1">{errors.tipoSangre.message}</p>}
           </div>
 
+          {/* Botones */}
           <div className="flex flex-col sm:flex-row gap-3 mt-6">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg flex justify-center items-center gap-2 transition duration-200 disabled:opacity-50"
-            >
-              {!isSubmitting ? '💾 Guardar' : (
+             <Button type="submit" variant="success" disabled={isSubmitting} className="flex-1">
+              {!isSubmitting ? "💾 Guardar" : (
                 <>
-                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
                   </svg>
-                  <span>Guardando...</span>
+                  Guardando...
                 </>
               )}
-            </button>
+            </Button>
 
-            <button
-              type="button"
-              onClick={onVolver}
-              className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 rounded-lg transition duration-200"
-            >
+            <Button type="button" onClick={onVolver} variant="muted" className="flex-1">
               🔙 Volver
-            </button>
+            </Button>
           </div>
         </form>
       </div>

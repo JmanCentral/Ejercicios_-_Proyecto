@@ -1,9 +1,9 @@
 // pages/LoginPage.tsx
 import LoginForm from '../components/LoginUsuario';
-import { UsuarioService } from '../services/UsuarioService';
+import { UsuarioService } from '../services/usuarioService';
 import type { LoginRequest, LoginResponse } from '../interfaces/Auth';
 import { useNavigate , useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../hooks/useAuth'; 
 import { useEffect } from 'react'
 
 
@@ -12,7 +12,6 @@ function LoginPage() {
   const location = useLocation();
   const { setToken, isAuthenticated } = useAuth();
 
-  // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAuthenticated) {
       const from = location.state?.from?.pathname || '/list/Pacientes';
@@ -24,10 +23,9 @@ function LoginPage() {
     try {
       const response: LoginResponse = await UsuarioService.login(credentials);
       setToken(response.accessToken);
-      
       const from = location.state?.from?.pathname || '/list/Pacientes';
-      
       alert(`Bienvenido, ${response.name} 👋`);
+
       navigate(from, { replace: true });
     } catch (error) {
       alert("❌ Credenciales inválidas o error de red.");
@@ -48,3 +46,5 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+

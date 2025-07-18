@@ -1,18 +1,20 @@
 
 import { useForm } from 'react-hook-form';
-import type { UserDTO } from '../interfaces/User';
+import { registroSchema } from "../schemas/RegistroSchema";
+import type { RegistroSchemaType } from "../schemas/RegistroSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
-  onRegistro: (data: UserDTO) => void;
+  onRegistro: (data: RegistroSchemaType) => void;
   onVolver: () => void;
 }
 
-function RegistroForm({ onRegistro , onVolver }: Props) {
+function RegistroForm({ onRegistro , onVolver ,  }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<UserDTO>();
+  } = useForm<RegistroSchemaType>({resolver: zodResolver(registroSchema),});
 
 
   return (
@@ -26,7 +28,7 @@ function RegistroForm({ onRegistro , onVolver }: Props) {
             <input
               type="text"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              {...register("name", { required: "Campo obligatorio" })}
+              {...register("name")}
             />
             {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>}
           </div>
@@ -36,7 +38,7 @@ function RegistroForm({ onRegistro , onVolver }: Props) {
             <input
               type="text"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              {...register("username", { required: "Campo obligatorio" })}
+              {...register("username")}
             />
             {errors.username && <p className="text-sm text-red-500 mt-1">{errors.username.message}</p>}
           </div>
@@ -46,13 +48,7 @@ function RegistroForm({ onRegistro , onVolver }: Props) {
             <input
               type="email"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              {...register("email", {
-                required: "Campo obligatorio",
-                pattern: {
-                  value: /^[^@]+@[^@]+\.[^@]+$/,
-                  message: "Email inválido",
-                },
-              })}
+              {...register("email")}
             />
             {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>}
           </div>
@@ -62,10 +58,7 @@ function RegistroForm({ onRegistro , onVolver }: Props) {
             <input
               type="password"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              {...register("password", {
-                required: "Campo obligatorio",
-                minLength: { value: 6, message: "Mínimo 6 caracteres" },
-              })}
+              {...register("password")}
             />
             {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>}
           </div>
@@ -81,6 +74,7 @@ function RegistroForm({ onRegistro , onVolver }: Props) {
                 <option value="USER">Usuario</option>
                 <option value="ADMIN">Administrador</option>
             </select>
+            {errors.rol && <p className="text-sm text-red-500 mt-1">{errors.rol.message}</p>}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 mt-6">

@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+// src/context/AuthProvider.tsx
+import { createContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
   token: string | null;
@@ -8,19 +9,17 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Cargar token del localStorage al iniciar
   useEffect(() => {
     const initializeAuth = () => {
       try {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-          // Validar si el token no ha expirado
           const payload = JSON.parse(atob(storedToken.split('.')[1]));
           if (payload.exp * 1000 > Date.now()) {
             setTokenState(storedToken);
@@ -57,21 +56,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      token, 
-      setToken, 
-      isAuthenticated: !!token, 
+    <AuthContext.Provider value={{
+      token,
+      setToken,
+      isAuthenticated: !!token,
       isLoading,
-      logout 
+      logout
     }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-// Hook personalizado para usar el contexto
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth debe usarse dentro de un AuthProvider');
-  return context;
 };
