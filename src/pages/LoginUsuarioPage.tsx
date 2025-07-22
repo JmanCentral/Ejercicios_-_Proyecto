@@ -1,28 +1,50 @@
 // pages/LoginPage.tsx
 import LoginForm from '../components/LoginUsuario';
 import { UsuarioService } from '../services/usuarioService';
-import type { LoginRequest, LoginResponse } from '../interfaces/auth';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
+import type { LoginRequest, LoginResponse } from '../interfaces/Auth';
+import { useNavigate , useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth'; 
+import { useEffect } from 'react'
+
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { setToken } = useAuth(); // aquí usamos el setToken del contexto
+  const location = useLocation();
+  const { setToken, isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/list/Pacientes';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
 
   const handleLogin = async (credentials: LoginRequest) => {
     try {
       const response: LoginResponse = await UsuarioService.login(credentials);
-      setToken(response.accessToken); // Guardamos el token en el contexto
+      setToken(response.accessToken);
+      const from = location.state?.from?.pathname || '/list/Pacientes';
       alert(`Bienvenido, ${response.name} 👋`);
-      navigate('/list/Pacientes'); // Redirigir a la página de pacientes
+
+      navigate(from, { replace: true });
     } catch (error) {
       alert("❌ Credenciales inválidas o error de red.");
       console.error(error);
     }
   };
 
+  // Si ya está autenticado, mostrar loading
+  if (isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return <LoginForm onLogin={handleLogin} />;
 }
 
 export default LoginPage;
+
+
